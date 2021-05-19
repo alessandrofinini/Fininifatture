@@ -5,77 +5,64 @@
  */
 package com.mycompany.gestionefatture;
 
+import java.time.LocalDate;
+import java.time.Month;
+
 /**
  *
  * @author pc hp
  */
 public class Fattura 
 {
-    private String nomeCliente;
-    private String cognomeCliente;
-    private long codiceIdentificativoProgressivo;
-    private String partitaIva;
+    
     private float importo;
-    private Cliente[] cliente;
-    private int nClientiPresenti;
-    private final int N_MAX_CLIENTI=100; 
-
-    public Fattura(String nome, String cognome, long codiceIdentificativoProgressivo, String partitaIva) 
-    {
-        this.nomeCliente = nome;
-        this.cognomeCliente = cognome;
-        this.codiceIdentificativoProgressivo = codiceIdentificativoProgressivo;
-        this.partitaIva = partitaIva;
-    }
-     public Fattura(Fattura f)
-    {
-        setCodiceIdentificativoProgressivo(codiceIdentificativoProgressivo);
-        setNome("");
-        setCognome("");
-        
-        nClientiPresenti=0;
-    }
+    private Fattura[] elencoFatture;
+    private int fattureTot=0;
+    private int nFatturePresenti=0;
+    private final int N_MAX_FATTURE=100; 
+    private LocalDate dataSaldo;
+    private LocalDate dataEmissione;
+   
     
 
-    public String getNome() 
+    public Fattura(float importo,int anno,int mese, int giorno) 
     {
-        return nomeCliente;
+       
+        this.importo=importo;
+        this.dataEmissione=LocalDate.of(anno,mese,giorno);
+        this.dataSaldo=LocalDate.of(anno,mese,giorno);
+        
+    }
+     public Fattura()
+    {
+        elencoFatture=new Fattura[N_MAX_FATTURE];  
+        nFatturePresenti=0;
     }
 
-    public void setNome(String nome)
+    public LocalDate getDataSaldo() 
     {
-        this.nomeCliente = nome;
+        return dataSaldo;
     }
 
-    public String getCognome() 
+   
+
+    public LocalDate getDataEmissione()
     {
-        return cognomeCliente;
+        return dataEmissione;
     }
 
-    public void setCognome(String cognome) 
-    {
-        this.cognomeCliente = cognome;
-    }
+   
+     public Fattura(Fattura f)
+     {
+         
+         dataEmissione=f.getDataEmissione();
+         dataSaldo=f.getDataSaldo();
+         importo=f.getImporto();
+                 
+     }
+    
 
-    public long getCodiceIdentificativoProgressivo() 
-    {
-        return codiceIdentificativoProgressivo;
-    }
-
-    public void setCodiceIdentificativoProgressivo(long codiceIdentificativoProgressivo) 
-    {
-        this.codiceIdentificativoProgressivo = codiceIdentificativoProgressivo;
-    }
-
-    public String getPartitaIva() 
-    {
-        return partitaIva;
-    }
-
-    public void setPartitaIva(String partitaIva) 
-    {
-        this.partitaIva = partitaIva;
-    }
+    
 
     public float getImporto() 
     {
@@ -87,46 +74,68 @@ public class Fattura
         this.importo = importo;
     }
 
-    public int getnClientiPresenti() 
+    public int getnFatturePresenti() 
     {
-        return nClientiPresenti;
+        return nFatturePresenti;
     }
 
-    public void setnClientiPresenti(int nClientiPresenti) 
+    public void setnFatturePresenti(int nFatturePresenti) 
     {
-        this.nClientiPresenti = nClientiPresenti;
+        this.nFatturePresenti = nFatturePresenti;
     }
+
+ 
     
      public long getCliente(long codiceIdentificativoProgressivo)
     {
         return codiceIdentificativoProgressivo;
     }
     
-    public int aggiungiCliente(Cliente cliente)
+    public int aggiungiFattura(Fattura f)
     {
-        if (nClientiPresenti>N_MAX_CLIENTI)
-            return -1;      //LA CLASSE HA RAGGIUNTO IL NUMERO MASSIMO DI 
-        elencoClienti[nClientiPresenti]=new Cliente(cliente.getcodiceIdentificativoProgressivo,cliente.getCognome(),cliente.getNome());
-        nClientiPresenti++;
-        return 0;
+        int i=0;
+        if(nFatturePresenti<0||nFatturePresenti>100)
+        {
+            System.out.println("IL NUMERO DI FATTURE TOTALI E' SOPRA IL NUMERO MASSIMO");
+            return i=-1;
+        }
+        elencoFatture[nFatturePresenti]=new Fattura(f);
+        nFatturePresenti++;
+        fattureTot++;
+        return i;//fattura inserita correttamente
     }
-    
-    //metodo che consente di modificare i dati anagrafici di uno studente della classe
-    // -1 --> studente non presente
-    //  0 --> ok
+   
     
     
-    
-    
-    
-    public String elencoClienti()
+    public int rimuoviFattura(int codice)
     {
-        String s;
-        if(nClientiPresenti==-1)
-            s="nessun cliente presente";
-        else
-      s="Cliente:"+getCliente(codiceIdentificativoProgressivo);
-      return s;
+        
+        try
+        {
+            if(elencoFatture[codice]==null)
+                return -2; 
+            elencoFatture[codice]=null;
+                return codice;
+        }
+        catch(ArrayIndexOutOfBoundsException codiceNonValido)
+        {
+            return -1;
+        }
+        
     }
+
+    @Override
+    public String toString() {
+        return "Fattura{" + "importo=" + importo + ", dataSaldo=" + dataSaldo + ", dataEmissione=" + dataEmissione + '}';
+    }
+
+    
+
+            
+    
+    
+    
+    
+   
     
 }

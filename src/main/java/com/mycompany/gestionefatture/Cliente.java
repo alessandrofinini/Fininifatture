@@ -15,9 +15,8 @@ public class Cliente
     private String cognome;
     private String nome;
     private String partitaIva;
-    private int nFatturePresenti;
-    private Fattura[] fatture;
-    private final int N_MAX_FATTURE=10;
+   private Cliente[] clienti;
+   
 
     public Cliente(long codiceIdentificativo, String cognome, String nome, String partitaIva) 
     {
@@ -28,16 +27,19 @@ public class Cliente
     }
     public Cliente(Cliente c)
     {
-        setCodiceIdentificativo(codiceIdentificativo);
-        setNome("");
-        setCognome("");
-        fatture=new Fattura[N_MAX_FATTURE];
-        nFatturePresenti=0;
+        codiceIdentificativo=c.getCodiceIdentificativo();
+        cognome=c.getCognome();
+        nome=c.getNome();
+        partitaIva=c.getPartitaIva();
     }
     public Cliente()
     {
-        
+        setCodiceIdentificativo(codiceIdentificativo);
+        setNome("");
+        setCognome("");
     }
+
+    
 
     public long getCodiceIdentificativo() 
     {
@@ -78,31 +80,12 @@ public class Cliente
     {
         this.partitaIva = partitaIva;
     }
-
-    public int getnFatturePresenti() 
-    {
-        return nFatturePresenti;
-    }
-
-    public void setnFatturePresenti(int nFatturePresenti) 
-    {
-        this.nFatturePresenti = nFatturePresenti;
-    }
-
-    public Fattura[] getFatture() 
-    {
-        return fatture;
-    }
-
-    public void setFatture(Fattura[] fatture) 
-    {
-        this.fatture = fatture;
-    }
+    
     
     public String toString()    
   {
       String s;
-      s="Codice identificativo:"+getCodiceIdentificativo()+"\nCognome:"+getCognome()+"\nNome:"+getNome();
+      s="Codice identificativo:"+getCodiceIdentificativo()+"\nCognome:"+getCognome()+"\nNome:"+getNome()+"\nPartita Iva:"+getPartitaIva();
       return s;
   }
     
