@@ -15,7 +15,7 @@ public class CodiceNonValido extends Exception
    public String toString()
     {
         String s="";
-        s+="Il codice inserito non è esistente";
+        s+="Il codice inserito non è valido";
         return s;
     } 
 

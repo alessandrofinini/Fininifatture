@@ -24,7 +24,7 @@ public class TextFile
     private BufferedReader reader;
     private BufferedWriter writer;
     
-    public TextFile(String filename, char mode) throws FileNotFoundException, IOException
+    public TextFile(String nomeFile, char mode) throws FileNotFoundException, IOException
     {
         this.mode='R';  //come default apriamo il file in lettura
         boolean append=false; //come default mettiamo append=false
@@ -33,14 +33,14 @@ public class TextFile
             this.mode='W';
         
         if (mode=='R')
-             reader=new BufferedReader(new FileReader(filename));
+             reader=new BufferedReader(new FileReader(nomeFile));
         else
-            writer=new BufferedWriter(new FileWriter(filename,append));
+            writer=new BufferedWriter(new FileWriter(nomeFile,append));
     
     }
     
     //costruttore che consente d inserire anche il parametro append
-    public TextFile(String filename,char mode, boolean append) throws FileNotFoundException, IOException
+    public TextFile(String nomeFile,char mode, boolean append) throws FileNotFoundException, IOException
     {
         this.mode='R';  //come default apriamo il file in lettura
                               
@@ -48,9 +48,9 @@ public class TextFile
             this.mode='W';
         
         if (mode=='R')
-             reader=new BufferedReader(new FileReader(filename));
+             reader=new BufferedReader(new FileReader(nomeFile));
         else
-            writer=new BufferedWriter(new FileWriter(filename,append));
+            writer=new BufferedWriter(new FileWriter(nomeFile,append));
     
     }
     

@@ -7,8 +7,8 @@ package com.mycompany.gestionefatture;
 
 import eccezioni.*;
 import java.io.IOException;
-import java.io.Serializable;
-import java.time.DateTimeException;
+
+
 import java.util.InputMismatchException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  *
  * @author pc hp
  */
-public class Main implements Serializable
+public class Main 
 {
     public static void main(String[] args) throws FileException, CodiceNonValido 
     {
@@ -47,26 +47,22 @@ public class Main implements Serializable
         vociMenu[6]="ESPORTAZIONE IN FILE CSV";
         vociMenu[7]="SALVATAGGIO E CARICAMENTO IN FILE BINARIO";
          
-        try
+      try
         {
-            FileInputStream f1=new FileInputStream("fatture.bin");
-            ObjectInputStream reader=new ObjectInputStream(f1);
-            try
-            {
-                f=(Fattura)reader.readObject();
-                reader.close();
-                System.out.println("\nLettura da file avvevuta correttamente");
-
-            }
-            catch(ClassNotFoundException ex)
-            {
-                reader.close();
-                System.out.println("\nErrore nella lettura");
-            }
+            f=f.caricaFatture(nomeFileBinario);
+            System.out.println("Dati caricati correttamente!");
         }
-        catch(IOException ex)
+        catch(FileNotFoundException ex)
         {
-            System.out.println("\nImpossibile accedere al file");
+            System.out.println("Impossibile accedere al file, i dati non sono stati caricati!");
+        }
+        catch(FileException ex)
+        {
+            System.out.println("Errore di lettura, i dati non sono stati caricati!");
+        } 
+        catch (IOException ex) 
+        {
+            System.out.println("Impossibile accedere al file!");
         }
          
         Menu menu=new Menu(vociMenu);
@@ -131,11 +127,16 @@ public class Main implements Serializable
                     esitoOperazione=0;
                     
                     
-                    esitoOperazione=f.rimuoviFattura(codice);;
-                    if (esitoOperazione==-1)
-                        System.out.println("La fattura non è presente. Impossibile rimuovere la fattura");
-                    else
+                    
+                    try
+                    {
+                        f.rimuoviFattura(codice);
                         System.out.println("ok rimozione effettuata correttamente");
+                    }
+                    catch(CodiceNonValido e1)
+                    {
+                        System.out.println(e1.toString());
+                    } 
                     
                     System.out.println("premi un pulsante per continuare");
                     tastiera.nextLine();
@@ -214,7 +215,7 @@ public class Main implements Serializable
                 {
                     try
                     {
-                        f.esportaInCSV();
+                        f.esportaInCSV(nomeFileTesto);
                     }
                     catch(IOException e1)
                     {
@@ -230,7 +231,7 @@ public class Main implements Serializable
                 {
                     try
                         {
-                            f.salvaFattura();
+                            f.salvaFattura(nomeFileBinario);
                             System.out.println("\nSalvataggio avvenuto con successo");
                         }
                         catch(IOException ex)

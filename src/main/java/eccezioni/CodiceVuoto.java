@@ -9,23 +9,13 @@ package eccezioni;
  *
  * @author pc hp
  */
-public class CodiceVuoto extends Exception
+public class CodiceVuoto 
 {
-    private int codice;
-
-    public CodiceVuoto(int codice) 
-    {
-        this.codice = codice;
-    }
-
-    public int getCodice() 
-    {
-        return codice;
-    }
     public String toString()
     {
         String s="";
-        s+="Il codice emesso:"+getCodice()+"  è vuoto.";
+        s+="Il codice inserito è vuoto";
         return s;
-    }
+    } 
+    
 }

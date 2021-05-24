@@ -20,27 +20,37 @@ import file.TextFile;
 
 /**
  *
+ *  è la classe che contiene l'array di tipo Cliente
+ * contiene i metodi necessari per gestire una fattura
+ * i suoi attributi sono:<br>
+ * elencoFatture: è un array di oggetti di classe Cliente 
+ * NUM_MAX_FATTURE: attributo statico,è una costante, rappresenta il numero massimo delle fatture=100
+ * nFatturePresenti: è un contatore che conta il numero di fatture presenti nell'array
  * @author pc hp
  */
-public class Fattura 
+public class Fattura implements Serializable
 {
-    
-    
     private Cliente[] elencoFatture;
-    private int fattureTot=0;
     private int nFatturePresenti=0;
-    private final int N_MAX_FATTURE=100; 
-        
-    
-   
-    
-
-   
+    private final static int N_MAX_FATTURE=100; 
+    /**
+     * Costruttore di default(istanzia un array di tipo Cliente)
+     */
      public Fattura()
     {
         elencoFatture=new Cliente[N_MAX_FATTURE];  
         
     }
+    //return 1 : numero massimo di fatture raggiunte
+    //return 0 : fattura aggiunta correttamente
+     
+     
+     /**
+     * Costruttore di copia. Consente di istanziare una nuova Fattura,
+     * copiando un altro oggetto di classe Fattura
+     * copia dell' Fattura passata come parametro
+     * @param f oggetto di classe Fattura da cui effettuare la copia
+     */
          public Fattura(Fattura f)
     {
         elencoFatture=new Cliente[N_MAX_FATTURE];  
@@ -53,42 +63,45 @@ public class Fattura
     }
    
 
-    public Cliente[] getElencoFatture() 
-    {
-        return elencoFatture;
-    }
+    /**
+     * Metodo getter dell'array di oggetti di classe Cliente elencoFatture
+     * inserendo la posizione dell'oggetto che vogliamo visualizzare
+     * Ci permette di visualizzare il contenuto dell'oggetto in posizione posizione
+     * @param posizione è la posizione in cui voglio vedere l'oggetto
+     * @return Il contenuto dell'array elencoFatture in posizione posizione, sarà un oggetto di classe Cliente
+     */
     public Cliente getFattura(int posizione)
     {
         return elencoFatture[posizione];
     }
+    
     public int getN_MAX_FATTURE() 
     {
         return N_MAX_FATTURE;
     }
-
- 
-
+    /**
+     * Restituisce il numero di fatture presenti all'array
+     * @return 
+     */
     public int getnFatturePresenti() 
     {
         return nFatturePresenti;
     }
 
-    public void setnFatturePresenti(int nFatturePresenti) 
-    {
-        this.nFatturePresenti = nFatturePresenti;
-    }
-
- 
-    
-    
+    /**
+     * Aggiunge un ogetto istanziato di tipo Cliente all'array
+     * @param c1 c1 è l'oggetto istanziato che sarà aggiunto all'array
+     */
     
     public void aggiungiFattura(Cliente c1)
     {
             elencoFatture[nFatturePresenti]=c1;
             nFatturePresenti++;
     }
-   
-    
+    /**
+     * aggiorna la posizione delle fatture effettuate nell'array
+     * @param posizione la posizione serve per modificare l'ordine delle fatture
+     */
     private void aggiornaPosizioneFattura(int posizione)
     {
         for (int i=posizione;i<nFatturePresenti-1;i++)
@@ -98,6 +111,10 @@ public class Fattura
         elencoFatture[nFatturePresenti-1]=null;  
         nFatturePresenti--;
     }
+      /**
+     * Elimina una fattura 
+     * @param codice è il codice della fattura da eliminare
+     */
     public int rimuoviFattura(int codice) throws CodiceNonValido
     {
         int f=0;
@@ -121,7 +138,14 @@ public class Fattura
         return -1;
     
     }
-        
+      /**
+     * è il metodo che permette di registrare il pagamento di una fattura
+     * @param giorno è il giorno del saldo della fattura
+     * @param mese è il mese del saldo della fattura
+     * @param anno è l'anno del saldo della fattura
+     * @param c1 è il codice che permette di definire quale fattura va pagata
+     * @return 
+     */
      public int saldoNuovaFattura(int giorno, int mese, int anno, int c1)
     {
         int risultato;
@@ -147,6 +171,11 @@ public class Fattura
         return 2;
          
     }
+     
+     /**
+     * Visualizzare i dati di tutte le fatture emesse e non ancora pagate
+     * #@throws NessunClienteException 
+     */ 
    public void visualizzaDatiCliente() throws NessunClienteException
     {
         if(nFatturePresenti==0)
@@ -157,7 +186,11 @@ public class Fattura
         }
         System.out.println("\n");
     }
-   
+     /**
+     * Visualizza le fatture effettuate da una determinata persona
+     * @param nome è il nome della persona di cui si vuole visualizzare le fatture pagate e non pagate
+     * @param cognome è il cognome della persona di cui si vuole visualizzare le fatture pagate e non pagate
+     */ 
      public void visualizzaFattureDiUnaPersona(String nome,String cognome)
     {
         System.out.println("Fatture di un determinato cliente: ");
@@ -169,59 +202,64 @@ public class Fattura
             }
         }
     }
-         public void esportaInCSV()throws IOException,FileException
+     
+     /**
+     * Esporta in file di testo, in formato csv, tutte le fatture emesse
+     * @throws IOException
+     * @throws FileException 
+     */
+   public void esportaInCSV(String nomeFile) throws IOException, FileException
     {
-        TextFile f1=new TextFile("Salvataggio.txt",'W',true);
-
-        for(int i=0;i<getnFatturePresenti();i++)
+        TextFile f1=new TextFile(nomeFile,'W');
+        Cliente cliente;
+        for(int i=0;i<nFatturePresenti;i++)
         {
-            if(elencoFatture[i]!=null)
+            cliente=elencoFatture[i];
+            if(cliente!=null)
             {
-                f1.toFile(elencoFatture[i].getCodiceIdentificativo()+";"+";"+elencoFatture[i].getCognome()+";"+elencoFatture[i].getNome()+";"+elencoFatture[i].getPartitaIva()+";"+elencoFatture[i].getImporto()+";"+elencoFatture[i].getDataEmissione()+";"+elencoFatture[i].getDataSaldo()+";\n");
+                f1.toFile(elencoFatture[i].getCognome()+";"+elencoFatture[i].getNome()+";"+elencoFatture[i].getCodiceIdentificativo()+";"+elencoFatture[i].getPartitaIva()+"\n");
             }
-        } 
+        }
         f1.close();
     }
-          public void salvaFattura() throws FileNotFoundException, IOException
+         /**
+     * Salva i dati su un file binario
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
+          public void salvaFattura(String nomeFile) throws FileNotFoundException, IOException
     {
        
-        FileOutputStream f1=new FileOutputStream("Bin/ Fattura.bin");
-        ObjectOutputStream writer=new ObjectOutputStream(f1);
+        FileOutputStream f=new FileOutputStream("Bin/ Fattura.bin");
+        ObjectOutputStream writer=new ObjectOutputStream(f);
         writer.writeObject(this);
         writer.flush();
         writer.close();          
                 
     }
-          
-   public Fattura caricaFattura(String nomeFile) throws IOException, FileException
-     {
-        Fattura f=null;
-        
-        
-        try
+                /**
+     * Carica i dati su un file binario
+     * @throws FileNotFoundException
+     * @throws IOException 
+     * @throws FileException
+     */
+   public Fattura caricaFatture(String nomeFile) throws FileNotFoundException, IOException, FileException
+    {
+        FileInputStream f1=new FileInputStream(nomeFile);
+        ObjectInputStream inputStream=new ObjectInputStream(f1); 
+        Fattura c;
+        try 
         {
-            FileInputStream f1=new FileInputStream(nomeFile);
-            ObjectInputStream reader=new ObjectInputStream(f1);
-            try
-            {
-                f=(Fattura)reader.readObject();
-                reader.close();
-                System.out.println("\nLettura da file avvevuta correttamente");
-
-            }
-            catch(ClassNotFoundException ex)
-            {
-                reader.close();
-                System.out.println("\nErrore nella lettura");
-            }
-        }
-        catch(IOException ex)
+            c=(Fattura)inputStream.readObject();
+            inputStream.close();
+            return c;
+        } 
+        catch (ClassNotFoundException ex) 
         {
-            System.out.println("\nImpossibile accedere al file");
+            inputStream.close();
+            throw new FileException("Errore nella lettura del file!");
         }
-        
-        return f;
-     }
+    }
           
           
           
